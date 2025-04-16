@@ -1,0 +1,24 @@
+meta {
+  name: Process
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:1000/api/process
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "urls": [
+      "https://www.onthebeach.co.uk",
+      "https://www.ryanair.com/de/de",
+      "https://georgejmx.dev",
+      "https://www.apple.com",
+      "https://www.theguardian.com/europe",
+      "https://www.welt.de/"
+    ]
+  }
+}

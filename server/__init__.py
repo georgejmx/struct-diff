@@ -14,6 +14,7 @@ logging.basicConfig(
     datefmt="%Y-%m-%d %H:%M:%S",
 )
 
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Handler to isomorphically initialise the weaviate collection for dev purposes"""
@@ -21,16 +22,19 @@ async def lifespan(app: FastAPI):
     logging.info("Weaviate collection verified")
     yield
 
+
 load_dotenv()
 app = FastAPI(
-    title="DiffSearch",
-    summary="Classify websites into relative structural similarity",
+    title="StructDiff",
+    summary="Determine the relative structure of websites using vector based search",
     lifespan=lifespan,
 )
+
 
 @app.get("/health", response_class=PlainTextResponse)
 def health_controller() -> str:
     logging.info("Call to /health")
     return "Healthy"
+
 
 app.include_router(api_router)

@@ -16,10 +16,12 @@ MODEL_PATH = "./models/all-mpnet-base-v2"
 
 router = APIRouter(prefix="/api")
 
+
 @dataclass
 class ProcessRequest:
     urls: list[str]
     timestamp: Optional[int] = None
+
 
 @router.post("/process")
 async def process_handler(req: ProcessRequest) -> dict:
@@ -35,15 +37,17 @@ async def process_handler(req: ProcessRequest) -> dict:
     scrapes = await gather(*[scrape_site(url, timestamp) for url in req.urls])
     logging.info("Sites scraped")
 
-    model = SentenceTransformer(MODEL_PATH) # pyright: ignore This is according to the docs
+    model = SentenceTransformer(MODEL_PATH)
     encodings = [model.encode(scrape) for scrape in scrapes]
     logging.info("Encodings generated")
 
-    embeddings_dict = {url: np.array(encoding).tolist() for url, encoding in zip(req.urls, encodings)}
+    embeddings_dict = {
+        url: np.array(encoding).tolist() for url, encoding in zip(req.urls, encodings)
+    }
     store_embeddings(embeddings_dict)
-    logging.info("Embeddings generated")
 
     return {"message": "success"}
+
 
 @router.get("/similarity")
 async def search_handler(url: str, timestamp: Optional[int] = None) -> dict:
@@ -51,7 +55,7 @@ async def search_handler(url: str, timestamp: Optional[int] = None) -> dict:
     scrape = await scrape_site(url, timestamp or DEFAULT_SITE_TIMESTAMP)
     logging.info("Site scraped")
 
-    model = SentenceTransformer(MODEL_PATH) # pyright: ignore This is according to the docs
+    model = SentenceTransformer(MODEL_PATH)
     encoding = model.encode(scrape)
     logging.info("Encoding generated")
 
