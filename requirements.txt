@@ -1,8 +1,7 @@
 httpx==0.28.1
 fastapi==0.104.1
 uvicorn==0.24.0.post1
-beautifulsoup4==4.12.2
 numpy==1.26.2
 python-dotenv==1.0.0
-sentence_transformers==4.0.2
+transformers==4.50.3
 weaviate-client==4.12.0

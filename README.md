@@ -11,7 +11,7 @@ This service scrapes, classifies and ranks websites by their structural similari
 - The `/process` endpoint is needed to input a vector representation of the site's HTML. Provide a list of URLs to input into the service
 - The `/similarity` endpoint is where similarity search is happens. Provide a URL as a query parameter, and this endpoint shows how structurally similar all sites previously inputted using the process endpoint
 
-A full in the API spec for each endpoint is provided as a [Bruno Collection](./docs/bruno).
+The API spec for each endpoint is provided as a [Bruno Collection](./docs/bruno).
 
 ## Local setup
 

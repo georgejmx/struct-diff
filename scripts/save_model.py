@@ -1,9 +1,12 @@
-from sentence_transformers import SentenceTransformer
+from transformers import MarkupLMProcessor, MarkupLMModel
 
 
 def main():
-    model = SentenceTransformer("all-mpnet-base-v2")
-    model.save("./models/all-mpnet-base-v2")
+    processor = MarkupLMProcessor.from_pretrained("microsoft/markuplm-base")
+    model = MarkupLMModel.from_pretrained("microsoft/markuplm-base")
+
+    processor.save_pretrained("./models/saved_markup_processor")
+    model.save_pretrained("./models/saved_markup_model")
 
 
 if __name__ == "__main__":

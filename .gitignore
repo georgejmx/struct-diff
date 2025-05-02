@@ -2,3 +2,4 @@
 .venv
 *__pycache__
 .pytest_cache
+scripts/sample_encode.py
