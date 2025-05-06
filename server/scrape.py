@@ -1,37 +1,57 @@
 from httpx import AsyncClient
+from bs4 import BeautifulSoup
 
-HTML_START = "<body"
-HTML_END = "</body>"
+
+RELEVANT_TAGS = [
+    "header",
+    "footer",
+    "main",
+    "nav",
+    "section",
+    "article",
+    "aside",
+    "div",
+    "h1",
+    "h2",
+    "h3",
+    "p",
+    "ul",
+    "ol",
+    "li",
+    "blockquote",
+    "a",
+    "img",
+    "video",
+    "audio",
+    "iframe",
+    "form",
+    "input",
+    "button",
+    "select",
+    "textarea",
+]
 
 
 async def fetch_site(url: str, timestamp: int) -> str:
     """Call the Wayback Machine for raw html at the given timestamp"""
     async with AsyncClient() as client:
-        wayback_url = f"https://web.archive.org/web/{url}"
+        wayback_url = f"https://web.archive.org/web/{timestamp}/{url}"
         response = await client.get(wayback_url)
-        return response.content.decode('utf-8', errors='ignore')
+        return response.text
 
-
-def extract_body(html: str) -> str | None:
-    start_marker_index = html.find(HTML_START)
-    if start_marker_index == -1:
-        return None
-
-    start_index = html.find('>', start_marker_index) + 1
-    end_index = html.find(HTML_END)
-    if end_index == -1:
-        return None
-
-    return html[start_index:end_index]
 
 async def scrape_site(url: str, timestamp: int) -> str:
     """Scrapes a single site given a timestamp and its raw html"""
     html = await fetch_site(url, timestamp)
-    body_html = extract_body(html)
+    soup = BeautifulSoup(html, "html.parser")
+    body = soup.find("body")
 
-    if not body_html:
+    if not body:
         raise Exception(
             f"Site with url {url} cannot be parsed or has severely malformed HTML"
         )
 
-    return body_html
+    text_tags = [
+        tag.name for tag in body.find_all(lambda tag: tag.name in RELEVANT_TAGS)
+    ]
+    return " ".join(text_tags)
